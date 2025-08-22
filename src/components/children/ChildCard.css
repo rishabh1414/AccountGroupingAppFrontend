@@ -1,0 +1,81 @@
+.child-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.08);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: card-breath 8s ease-in-out infinite 0.5s;
+}
+
+.child-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 16px 32px rgba(17, 24, 39, 0.12);
+}
+
+@keyframes card-breath {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.99);
+  }
+}
+
+.child-card-header {
+  padding: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.child-card-avatar {
+  background: #22c55e;
+  color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.child-card:hover .child-card-avatar {
+  transform: rotate(-10deg) scale(1.1);
+}
+
+.child-card-details {
+  min-width: 0;
+  flex: 1;
+}
+
+.child-card-name {
+  font-weight: 700;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.child-card-id-container {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.child-card-body {
+  padding: 0 1.2rem 1.2rem;
+  flex: 1;
+}
+
+.child-card-footer {
+  padding: 0.9rem 1.2rem;
+  border-top: 1px solid #eff2f7;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

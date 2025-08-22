@@ -1,0 +1,20 @@
+/* Page container + responsive grid for parent cards */
+.page-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
+.parents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+/* tighter grid on big screens => ~3 across comfortably */
+@media (min-width: 1280px) {
+  .parents-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

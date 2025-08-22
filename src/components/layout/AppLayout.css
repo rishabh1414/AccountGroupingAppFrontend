@@ -1,0 +1,142 @@
+/* src/components/layout/AppLayout.css */
+.app-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 280px;
+  background-color: #111827;
+  color: #d1d5db;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  transition: width 0.3s ease;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar-header {
+  padding: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-bottom: 1px solid #374151;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+}
+
+.sidebar-header .pi {
+  color: #6366f1;
+  font-size: 1.75rem;
+}
+
+.sidebar-header .app-name {
+  margin-left: 0.75rem;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .app-name {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebar-nav {
+  padding: 1rem;
+  flex-grow: 1;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 1rem;
+  margin: 0.25rem 0;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #d1d5db;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: #374151;
+  color: #ffffff;
+}
+
+.nav-link.active {
+  background: #4f46e5;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.nav-link .pi {
+  font-size: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.nav-link:hover .pi {
+  transform: scale(1.1);
+}
+
+.nav-link-label {
+  margin-left: 1rem;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .nav-link-label {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebar-toggle {
+  padding: 1rem;
+  border-top: 1px solid #374151;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  overflow-x: hidden; /* --- ENHANCEMENT: Explicitly hide horizontal scroll --- */
+}
+
+/* --- Responsive adjustments --- */
+@media (max-width: 992px) {
+  .sidebar {
+    position: fixed;
+    left: -280px;
+    z-index: 1000;
+    height: 100%;
+    transition: left 0.3s ease;
+  }
+  .sidebar.mobile-visible {
+    left: 0;
+  }
+  /* --- KEY CHANGE: Reduce padding on smaller screens --- */
+  .main-content {
+    padding: 1rem;
+  }
+}
+
+/* --- ENHANCEMENT: Further reduce padding on very small screens --- */
+@media (max-width: 576px) {
+  .main-content {
+    padding: 1rem 0.75rem;
+  }
+}

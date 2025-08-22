@@ -1,13 +1,62 @@
-body {
+/* src/index.css */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  --primary-color: #4f46e5;
+  --primary-color-light: #6366f1;
+  --surface-ground: #f9fafb;
+  --surface-card: #ffffff;
+  --surface-border: #e5e7eb;
+  --text-color: #374151;
+  --text-color-secondary: #6b7280;
+  --border-radius: 12px;
+}
+/* 1) Make html, body, and the React root fill the screen and stop body scrolling */
+html,
+body,
+#root {
+  height: 100%;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  overflow: hidden;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* 2) Turn your root into a column flex container */
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 3) Let your app’s main area scroll */
+.app-content {
+  flex: 1 1 auto; /* fill all leftover space */
+  overflow-y: auto; /* scroll inside here, not the body */
+}
+body {
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--surface-ground);
+  color: var(--text-color);
+  margin: 0;
+  width: 100vw;
+}
+
+/* Custom scrollbar for a more modern look */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c4c4c4;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
 }

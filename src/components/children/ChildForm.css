@@ -1,0 +1,24 @@
+/* --- NEW: Responsive styles for the ChildForm Dialog --- */
+
+/* On extra-small screens (mobile phones), make the dialog almost full-width. */
+.child-form-dialog {
+  width: 95vw;
+  max-width: 500px; /* Prevent it from getting too wide even on mobile landscape */
+}
+
+/* On small screens (tablets) and up, set a specific width */
+@media (min-width: 768px) {
+  .child-form-dialog {
+    width: 50vw;
+    max-width: 650px; /* A sensible maximum width for desktop */
+  }
+}
+
+/* Ensure consistent spacing between form fields */
+.child-form-dialog .field {
+  margin-bottom: 1.5rem;
+}
+
+.child-form-dialog .field:last-child {
+  margin-bottom: 0;
+}

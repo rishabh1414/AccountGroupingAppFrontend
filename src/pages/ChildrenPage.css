@@ -1,0 +1,20 @@
+/* src/pages/ChildrenPage.css */
+.children-grid {
+  display: grid;
+  /* --- KEY CHANGE ---
+     The minimum width is reduced to 330px to fit better on mobile.
+     The grid will create as many columns as can fit.
+  */
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 1.5rem;
+}
+
+/* --- ENHANCEMENT ---
+  For very small screens, switch to a single-column layout to prevent any overflow.
+*/
+@media (max-width: 374px) {
+  .children-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

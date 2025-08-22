@@ -1,0 +1,51 @@
+/* src/components/scheduler/FloatingTimer.css */
+.floating-timer {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 1100;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.95),
+    rgba(139, 92, 246, 0.95)
+  );
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 14px;
+  box-shadow: 0 12px 28px rgba(17, 24, 39, 0.22);
+  transform: translateY(10px);
+  opacity: 0;
+  animation: ft-in 260ms ease forwards;
+  backdrop-filter: blur(6px);
+}
+.floating-timer .ft-title {
+  font-size: 0.78rem;
+  opacity: 0.92;
+}
+.floating-timer .ft-time {
+  font-weight: 800;
+  font-size: 1.08rem;
+  margin-top: 2px;
+  letter-spacing: 0.4px;
+}
+
+@keyframes ft-in {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.floating-timer.pulse {
+  animation: ft-in 260ms ease forwards, ft-pulse 1200ms ease-in-out infinite;
+}
+@keyframes ft-pulse {
+  0% {
+    box-shadow: 0 12px 28px rgba(99, 102, 241, 0.35);
+  }
+  50% {
+    box-shadow: 0 14px 34px rgba(99, 102, 241, 0.55);
+  }
+  100% {
+    box-shadow: 0 12px 28px rgba(99, 102, 241, 0.35);
+  }
+}

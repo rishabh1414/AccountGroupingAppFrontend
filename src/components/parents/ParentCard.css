@@ -1,0 +1,182 @@
+/* Card shell */
+.parent-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  /* MODIFICATION: Using Flexbox for proper vertical distribution */
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  min-height: 380px; /* Set a minimum height for consistency */
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.parent-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(17, 24, 39, 0.1),
+    0 8px 10px -6px rgba(17, 24, 39, 0.1);
+}
+
+/* Accent bar */
+.card-accent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 4px;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  background: linear-gradient(90deg, #6366f1, #22c55e);
+}
+
+/* Header */
+.parent-card-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding-bottom: 12px;
+}
+
+.parent-info {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.parent-avatar {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.parent-details .parent-name {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  font-size: 1rem;
+}
+
+.parent-id {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.parent-quick {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Body */
+.parent-card-body {
+  /* MODIFICATION: This makes the body area expand and push the footer down */
+  flex: 1;
+  min-height: 0; /* Prevents overflow issues with nested grids */
+}
+
+/* Improved placeholder for when there are no children */
+.no-children {
+  color: #6b7280;
+  background: #f9fafb;
+  border: 1px dashed #e5e7eb;
+  padding: 20px;
+  border-radius: 12px;
+  height: 100%;
+  /* Centers the placeholder content */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+/* Children mini-cards grid */
+.child-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+/* Styles for child cards remain the same */
+.child-card-mini {
+  background: #ffffff;
+  border: 1px solid #eef2ff;
+  border-radius: 12px;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  box-shadow: 0 6px 14px rgba(99, 102, 241, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.child-card-mini:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.12);
+  background: #fafaff;
+}
+.mini-left {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+.child-avatar {
+  background: #f3f4f6;
+  color: #111827;
+}
+.child-text {
+  min-width: 0;
+}
+.child-name {
+  font-weight: 600;
+  font-size: 0.92rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.child-id {
+  font-size: 0.75rem;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mini-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* Footer */
+.parent-card-footer {
+  display: flex;
+  /* MODIFICATION: Aligns actions to the right for a cleaner look */
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 12px; /* Adds space above the footer actions */
+  border-top: 1px solid #f3f4f6; /* A subtle line to separate footer */
+}
+
+.footer-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* Icon-only sizing */
+.p-button.p-button-icon-only {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+}
+.countdown-chip {
+  font-size: 0.74rem;
+  color: #6b7280;
+  padding-left: 6px;
+}
