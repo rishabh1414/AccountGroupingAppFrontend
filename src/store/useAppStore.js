@@ -13,6 +13,7 @@ const CUSTOM_VALUE_FIELDS = [
   "agencyName",
   "agencyPhoneNumber",
   "agencySupportEmail",
+  "appTheme",
 ];
 
 const setAuthToken = (token) => {
@@ -91,6 +92,15 @@ const useAppStore = create((set, get) => ({
       set({ error: message, loading: false, isAuthenticated: false });
       throw new Error(message);
     }
+  }, // 2) Add inside create((set,get)=>({ ... }))
+  updateParentCustomValues: async (parentId, updates) => {
+    await api.patch(`/custom-values/parent/${parentId}?by=id`, { updates });
+    await get().fetchParents();
+  },
+
+  updateChildCustomValues: async (childId, updates) => {
+    await api.patch(`/custom-values/child/${childId}?by=id`, { updates });
+    await get().fetchParents();
   },
 
   logout: () => {

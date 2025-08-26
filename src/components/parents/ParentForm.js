@@ -9,7 +9,7 @@ import { classNames } from "primereact/utils";
 
 import useAppStore from "../../store/useAppStore";
 
-// Constants
+// ---- Custom Value Labels (now 8, includes App Theme)
 const CUSTOM_VALUE_FIELDS = {
   agencyColor1: "Agency Color 1",
   agencyColor2: "Agency Color 2",
@@ -18,8 +18,10 @@ const CUSTOM_VALUE_FIELDS = {
   agencyName: "Agency Name",
   agencyPhoneNumber: "Agency Phone Number",
   agencySupportEmail: "Agency Support Email",
+  appTheme: "App Theme", // NEW
 };
 
+// Default form values
 const defaultValues = {
   ghlLocation: null,
   alias: "",
@@ -30,7 +32,12 @@ const defaultValues = {
 };
 
 const ParentForm = ({ isVisible, onHide, editParent }) => {
-  const { addParent, updateParent, searchGhlLocations } = useAppStore();
+  const {
+    addParent,
+    updateParent,
+    updateParentCustomValues, // <- make sure this exists in your store
+    searchGhlLocations,
+  } = useAppStore();
 
   const [ghlSuggestions, setGhlSuggestions] = useState([]);
   const [submitError, setSubmitError] = useState("");
@@ -43,18 +50,23 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting, dirtyFields }, // Use dirtyFields to detect changes
+    formState: { errors, isSubmitting, dirtyFields },
   } = useForm({
     defaultValues,
     mode: "onChange",
   });
 
-  // Pre-fill form when editing
+  // Pre-fill when editing
   const formattedEditData = useMemo(() => {
     if (!isEditMode) return defaultValues;
     const customValueFields = {};
+    // copy whatever keys are present on the parent (including appTheme)
     for (const key in editParent.customValues) {
       customValueFields[key] = editParent.customValues[key]?.value || "";
+    }
+    // ensure all declared keys exist so inputs render
+    for (const key of Object.keys(CUSTOM_VALUE_FIELDS)) {
+      if (!(key in customValueFields)) customValueFields[key] = "";
     }
     return {
       ghlLocation: { name: editParent.name, id: editParent.locationId },
@@ -91,53 +103,54 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
   const onSubmit = async (data) => {
     setSubmitError("");
     setSuccessMessage("");
+
     try {
       if (isEditMode) {
-        // --- UPDATE LOGIC ---
-        const payload = {};
+        // -----------------------
+        // EDIT FLOW
+        // -----------------------
+        let changed = false; // <-- this fixes "changed is not defined"
 
-        // Check if alias has changed
+        // 1) Alias update (if changed)
         if (dirtyFields.alias) {
-          payload.alias = data.alias.trim();
+          await updateParent(editParent._id, { alias: data.alias.trim() });
+          changed = true;
         }
 
-        // Check which custom values have changed
+        // 2) Custom values update (send only changed keys)
         if (dirtyFields.customValues) {
-          const changedCustomValues = {};
+          const updates = {};
           for (const key in dirtyFields.customValues) {
             if (dirtyFields.customValues[key]) {
-              // Send the value in the format the backend expects
-              changedCustomValues[key] = { value: data.customValues[key] };
+              updates[key] = data.customValues[key];
             }
           }
-          if (Object.keys(changedCustomValues).length > 0) {
-            payload.customValues = changedCustomValues;
+          if (Object.keys(updates).length > 0) {
+            // This hits PATCH /api/custom-values/parent/:id and propagates to children + GHL
+            await updateParentCustomValues(editParent._id, updates);
+            changed = true;
           }
         }
 
-        // Only call the update function if something has actually changed
-        if (Object.keys(payload).length > 0) {
-          // The updateParent function in the store should call the single PUT endpoint
-          await updateParent(editParent._id, payload);
-          setSuccessMessage("Parent updated successfully!");
-        } else {
-          setSuccessMessage("No changes were made.");
-        }
+        setSuccessMessage(
+          changed ? "Parent updated successfully!" : "No changes were made."
+        );
       } else {
-        // --- CREATE LOGIC ---
+        // -----------------------
+        // CREATE FLOW
+        // -----------------------
         await addParent({
           name: data.ghlLocation.name,
           locationId: data.ghlLocation.id,
           alias: data.alias.trim(),
         });
-        onHide(); // Close the dialog immediately on successful creation
+        onHide(); // Close after creation
       }
     } catch (err) {
       console.error("Form submission failed:", err);
-      // Display the specific error message from the backend
       setSubmitError(
-        err.response?.data?.message ||
-          err.message ||
+        err?.response?.data?.message ||
+          err?.message ||
           "An unexpected error occurred."
       );
     }
@@ -183,7 +196,6 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
       modal
       closable={!isSubmitting}
     >
-      {/* --- MESSAGE DISPLAY --- */}
       {submitError && (
         <Message severity="error" text={submitError} className="mb-3" />
       )}
