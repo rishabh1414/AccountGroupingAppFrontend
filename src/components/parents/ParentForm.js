@@ -4,12 +4,167 @@ import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { AutoComplete } from "primereact/autocomplete";
+import { Dropdown } from "primereact/dropdown";
 import { Message } from "primereact/message";
 import { classNames } from "primereact/utils";
 
 import useAppStore from "../../store/useAppStore";
 
-// ---- Custom Value Labels (now 8, includes App Theme)
+// ---- Theme Options (SB = Sidebar BG, interact-bg = secondary bg, interact-text = text color)
+const THEME_VARS = {
+  yellow: {
+    "--sb-bg": "#000000",
+    "--interact-bg": "#facc15",
+    "--interact-text": "#0a0a0a",
+  },
+  green: {
+    "--sb-bg": "#0a1f14",
+    "--interact-bg": "#22c55e",
+    "--interact-text": "#ffffff",
+  },
+  red: {
+    "--sb-bg": "#2a0a0a",
+    "--interact-bg": "#ef4444",
+    "--interact-text": "#ffffff",
+  },
+  blue: {
+    "--sb-bg": "#0a1525",
+    "--interact-bg": "#3b82f6",
+    "--interact-text": "#ffffff",
+  },
+  teal: {
+    "--sb-bg": "#0a1f1f",
+    "--interact-bg": "#14b8a6",
+    "--interact-text": "#ffffff",
+  },
+  cyan: {
+    "--sb-bg": "#0a1f2a",
+    "--interact-bg": "#06b6d4",
+    "--interact-text": "#ffffff",
+  },
+  sky: {
+    "--sb-bg": "#0a1a2a",
+    "--interact-bg": "#38bdf8",
+    "--interact-text": "#0a0a0a",
+  },
+  indigo: {
+    "--sb-bg": "#151533",
+    "--interact-bg": "#6366f1",
+    "--interact-text": "#ffffff",
+  },
+  purple: {
+    "--sb-bg": "#1a0f2d",
+    "--interact-bg": "#a855f7",
+    "--interact-text": "#ffffff",
+  },
+  violet: {
+    "--sb-bg": "#1a1330",
+    "--interact-bg": "#8b5cf6",
+    "--interact-text": "#ffffff",
+  },
+  pink: {
+    "--sb-bg": "#2a0f1f",
+    "--interact-bg": "#ec4899",
+    "--interact-text": "#ffffff",
+  },
+  rose: {
+    "--sb-bg": "#2a0f18",
+    "--interact-bg": "#f43f5e",
+    "--interact-text": "#ffffff",
+  },
+  orange: {
+    "--sb-bg": "#2a1205",
+    "--interact-bg": "#f97316",
+    "--interact-text": "#ffffff",
+  },
+  amber: {
+    "--sb-bg": "#1f1505",
+    "--interact-bg": "#f59e0b",
+    "--interact-text": "#0a0a0a",
+  },
+  lime: {
+    "--sb-bg": "#1a220a",
+    "--interact-bg": "#84cc16",
+    "--interact-text": "#0a0a0a",
+  },
+  emerald: {
+    "--sb-bg": "#0a1f18",
+    "--interact-bg": "#10b981",
+    "--interact-text": "#ffffff",
+  },
+  fuchsia: {
+    "--sb-bg": "#240a2a",
+    "--interact-bg": "#d946ef",
+    "--interact-text": "#ffffff",
+  },
+  gray: {
+    "--sb-bg": "#0f0f0f",
+    "--interact-bg": "#9ca3af",
+    "--interact-text": "#ffffff",
+  },
+  slate: {
+    "--sb-bg": "#0f172a",
+    "--interact-bg": "#64748b",
+    "--interact-text": "#ffffff",
+  },
+  stone: {
+    "--sb-bg": "#1c1917",
+    "--interact-bg": "#78716c",
+    "--interact-text": "#ffffff",
+  },
+  neutral: {
+    "--sb-bg": "#171717",
+    "--interact-bg": "#737373",
+    "--interact-text": "#ffffff",
+  },
+  zinc: {
+    "--sb-bg": "#18181b",
+    "--interact-bg": "#71717a",
+    "--interact-text": "#ffffff",
+  },
+  brown: {
+    "--sb-bg": "#1a0f0a",
+    "--interact-bg": "#92400e",
+    "--interact-text": "#ffffff",
+  },
+  gold: {
+    "--sb-bg": "#1a1405",
+    "--interact-bg": "#eab308",
+    "--interact-text": "#0a0a0a",
+  },
+  silver: {
+    "--sb-bg": "#1a1a1a",
+    "--interact-bg": "#9ca3af",
+    "--interact-text": "#000000",
+  },
+  navy: {
+    "--sb-bg": "#0a1120",
+    "--interact-bg": "#1e3a8a",
+    "--interact-text": "#ffffff",
+  },
+  maroon: {
+    "--sb-bg": "#1a0a0f",
+    "--interact-bg": "#991b1b",
+    "--interact-text": "#ffffff",
+  },
+  olive: {
+    "--sb-bg": "#1a1f0a",
+    "--interact-bg": "#4d7c0f",
+    "--interact-text": "#ffffff",
+  },
+  aqua: {
+    "--sb-bg": "#0a1f1f",
+    "--interact-bg": "#06b6d4",
+    "--interact-text": "#0a0a0a",
+  },
+};
+
+const themeOptions = Object.keys(THEME_VARS).map((key) => ({
+  label: key.charAt(0).toUpperCase() + key.slice(1),
+  value: key,
+}));
+
+// ---- Custom Value Labels (includes App Theme)
 const CUSTOM_VALUE_FIELDS = {
   agencyColor1: "Agency Color 1",
   agencyColor2: "Agency Color 2",
@@ -18,7 +173,7 @@ const CUSTOM_VALUE_FIELDS = {
   agencyName: "Agency Name",
   agencyPhoneNumber: "Agency Phone Number",
   agencySupportEmail: "Agency Support Email",
-  appTheme: "App Theme", // NEW
+  appTheme: "App Theme", // dropdown
 };
 
 // Default form values
@@ -50,19 +205,33 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting, dirtyFields },
   } = useForm({
     defaultValues,
     mode: "onChange",
   });
 
-  // Pre-fill when editing
+  const selectedTheme = watch("customValues.appTheme");
+
+  // Normalize potential existing theme from GHL
+  const normalizeThemeKey = (val) => {
+    if (!val || typeof val !== "string") return "";
+    const k = val.trim().toLowerCase();
+    return Object.prototype.hasOwnProperty.call(THEME_VARS, k) ? k : "";
+  };
+
+  // Pre-fill when editing (show current GHL values if they exist)
   const formattedEditData = useMemo(() => {
     if (!isEditMode) return defaultValues;
+
     const customValueFields = {};
-    // copy whatever keys are present on the parent (including appTheme)
+    // copy whatever keys are present on the parent
     for (const key in editParent.customValues) {
-      customValueFields[key] = editParent.customValues[key]?.value || "";
+      let raw = editParent.customValues[key]?.value ?? "";
+      // normalize appTheme specifically
+      if (key === "appTheme") raw = normalizeThemeKey(raw);
+      customValueFields[key] = raw;
     }
     // ensure all declared keys exist so inputs render
     for (const key of Object.keys(CUSTOM_VALUE_FIELDS)) {
@@ -109,7 +278,7 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
         // -----------------------
         // EDIT FLOW
         // -----------------------
-        let changed = false; // <-- this fixes "changed is not defined"
+        let changed = false;
 
         // 1) Alias update (if changed)
         if (dirtyFields.alias) {
@@ -122,7 +291,11 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
           const updates = {};
           for (const key in dirtyFields.customValues) {
             if (dirtyFields.customValues[key]) {
-              updates[key] = data.customValues[key];
+              // send normalized appTheme key name as plain text
+              updates[key] =
+                key === "appTheme"
+                  ? normalizeThemeKey(data.customValues[key])
+                  : data.customValues[key];
             }
           }
           if (Object.keys(updates).length > 0) {
@@ -185,6 +358,87 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
 
   const getFieldLabel = (key) =>
     CUSTOM_VALUE_FIELDS[key] || key.replace(/([A-Z])/g, " $1");
+
+  // --- Preview helpers
+  const renderThemeSwatches = (themeKey) => {
+    const t = THEME_VARS[themeKey];
+    if (!t) return null;
+    return (
+      <div
+        className="flex gap-2 mt-2 p-2 rounded"
+        style={{ border: "1px solid #e5e7eb", justifyContent: "space-around" }}
+      >
+        <div
+          style={{
+            backgroundColor: t["--sb-bg"],
+            width: "30%",
+            height: "40px",
+            borderRadius: "4px",
+          }}
+          title="Sidebar BG"
+        />
+        <div
+          style={{
+            backgroundColor: t["--interact-bg"],
+            width: "30%",
+            height: "40px",
+            borderRadius: "4px",
+          }}
+          title="Interactive BG"
+        />
+        <div
+          style={{
+            backgroundColor: t["--interact-text"],
+            width: "30%",
+            height: "40px",
+            borderRadius: "4px",
+            border: "1px solid #9ca3af",
+          }}
+          title="Interactive Text"
+        />
+      </div>
+    );
+  };
+
+  const renderThemeGradientBar = (themeKey) => {
+    const t = THEME_VARS[themeKey];
+    if (!t) return null;
+    return (
+      <div className="mt-3">
+        <div
+          style={{
+            height: "14px",
+            width: "100%",
+            borderRadius: "6px",
+            background: `linear-gradient(90deg, ${t["--sb-bg"]} 35%, ${t["--interact-bg"]} 65%)`,
+            border: "1px solid #e5e7eb",
+          }}
+          title="Preview Bar (Sidebar → Interactive)"
+        />
+        <div
+          className="flex align-items-center gap-2 mt-2"
+          style={{ fontSize: 12 }}
+        >
+          <span style={{ opacity: 0.7 }}>Theme:</span>
+          <strong>{themeKey}</strong>
+          <span style={{ opacity: 0.7, marginLeft: "auto" }}>
+            Text color sample:
+          </span>
+          <span
+            style={{
+              display: "inline-block",
+              width: 18,
+              height: 18,
+              borderRadius: 4,
+              border: "1px solid #d1d5db",
+              background: t["--interact-text"],
+            }}
+            title="Interactive Text Color"
+          />
+        </div>
+      </div>
+    );
+  };
 
   return (
     <Dialog
@@ -268,19 +522,48 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
                   <Controller
                     name={`customValues.${key}`}
                     control={control}
-                    render={({ field }) => (
-                      <InputText
-                        id={field.name}
-                        {...field}
-                        placeholder={`Enter ${getFieldLabel(key)}`}
-                        disabled={isSubmitting}
-                      />
-                    )}
+                    render={({ field }) => {
+                      if (key === "appTheme") {
+                        return (
+                          <>
+                            <Dropdown
+                              id={field.name}
+                              value={field.value}
+                              options={themeOptions}
+                              onChange={(e) =>
+                                field.onChange(normalizeThemeKey(e.value))
+                              }
+                              filter
+                              placeholder="Select App Theme"
+                              className="w-full"
+                              disabled={isSubmitting}
+                            />
+                            {field.value && renderThemeSwatches(field.value)}
+                          </>
+                        );
+                      }
+                      return (
+                        <InputText
+                          id={field.name}
+                          {...field}
+                          placeholder={`Enter ${getFieldLabel(key)}`}
+                          disabled={isSubmitting}
+                        />
+                      );
+                    }}
                   />
                 </div>
               ))}
             </div>
           </>
+        )}
+
+        {/* Persistent preview at the end of the form */}
+        {selectedTheme && (
+          <div className="mt-3">
+            <h5 className="mt-0 mb-2">Theme Preview</h5>
+            {renderThemeGradientBar(selectedTheme)}
+          </div>
         )}
       </form>
     </Dialog>
