@@ -13,7 +13,7 @@ import ParentsPage from "./pages/ParentsPage";
 import ChildrenPage from "./pages/ChildrenPage";
 import AuditLogsPage from "./pages/AuditLogsPage";
 import UpdatePasswordPage from "./pages/UpdatePasswordPage";
-
+console.log("My API URL is:", process.env.REACT_APP_API_URL);
 // A component to protect routes that require authentication
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAppStore();
