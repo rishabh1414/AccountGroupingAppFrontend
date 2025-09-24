@@ -53,7 +53,7 @@ const ParentsPage = () => {
     useAppStore.getState().getActiveSchedule();
   }, [fetchParents]);
 
-  // --- Parent Actions ---
+  // --- TechBizCEO Actions ---
   const handleAddParent = () => {
     setSelectedParent(null);
     setIsParentFormVisible(true);
@@ -66,7 +66,7 @@ const ParentsPage = () => {
 
   const handleDeleteParent = (parent) => {
     confirm({
-      header: "Delete Parent",
+      header: "Delete TechBizCEO",
       message: `Are you sure you want to delete "${
         parent.alias || parent.name
       }"? This action cannot be undone.`,
@@ -77,7 +77,7 @@ const ParentsPage = () => {
           toast.current.show({
             severity: "success",
             summary: "Deleted",
-            detail: "Parent account has been removed.",
+            detail: "TechBizCEO account has been removed.",
             life: 3000,
           });
         } catch (e) {
@@ -105,7 +105,7 @@ const ParentsPage = () => {
           const result = await syncParentFromGhl(parent._id);
           toast.current.show({
             severity: "success",
-            summary: "Parent Synced",
+            summary: "TechBizCEO Synced",
             detail: result.message,
             life: 3000,
           });
@@ -139,7 +139,7 @@ const ParentsPage = () => {
   };
   const handleDeleteChild = (child) => {
     confirm({
-      header: "Delete Child",
+      header: "Delete PLEC",
       message: `Are you sure you want to delete "${
         child.alias || child.name
       }"? This action cannot be undone.`,
@@ -150,7 +150,7 @@ const ParentsPage = () => {
           toast.current.show({
             severity: "success",
             summary: "Deleted",
-            detail: "Child account has been removed.",
+            detail: "PLEC account has been removed.",
             life: 3000,
           });
         } catch (e) {
@@ -167,7 +167,7 @@ const ParentsPage = () => {
 
   const handleSync = async (parent) => {
     confirm({
-      header: `Sync Parent: ${parent.alias || parent.name}`,
+      header: `Sync TechBizCEO: ${parent.alias || parent.name}`,
       message: `Push this parent's custom values to all ${
         parent.children?.length || 0
       } children?`,
@@ -248,7 +248,11 @@ const ParentsPage = () => {
       />
       {/* Single animated toggle (start ↔ stop) with inline countdown */}
       <SchedulerToggle mode="global" />
-      <Button label="Add Parent" icon="pi pi-plus" onClick={handleAddParent} />
+      <Button
+        label="Add TechBizCEO"
+        icon="pi pi-plus"
+        onClick={handleAddParent}
+      />
     </div>
   );
 
@@ -267,7 +271,7 @@ const ParentsPage = () => {
       return (
         <Message
           severity="info"
-          text="No parent accounts found. Click 'Add Parent' to get started."
+          text="No parent accounts found. Click 'Add TechBizCEO' to get started."
           className="w-full"
         />
       );
@@ -298,17 +302,16 @@ const ParentsPage = () => {
   return (
     <div>
       <Helmet>
-        <title>Dashboard - Account Grouping App</title>
+        <title>TechBizCEOs - Account Grouping App</title>
         <meta name="description" content="View and manage grouped accounts." />
       </Helmet>
-      <h1>Dashboard</h1>
 
       <Toast ref={toast} />
       <ConfirmationDialog />
 
       <PageHeader
-        title="Agency & Sub-Account Manager"
-        subtitle="Centralized view and management of parent agencies and their children."
+        title="TechBizCEOs and Their Private Level End Clients"
+        subtitle="Centralized view and management of TechBizCEOs account and their Private Level End Clients."
         actions={headerActions}
       />
 

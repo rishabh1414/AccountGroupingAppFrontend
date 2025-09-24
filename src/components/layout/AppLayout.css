@@ -5,14 +5,21 @@
   overflow: hidden;
 }
 
+/* --- Sidebar: dark gradient, subtle border, softer hover --- */
 .sidebar {
   width: 280px;
-  background-color: #111827;
+  background: radial-gradient(
+      1200px 500px at -150px -150px,
+      rgba(79, 70, 229, 0.15),
+      transparent 60%
+    ),
+    linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
   color: #d1d5db;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  transition: width 0.3s ease;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+  border-right: 1px solid rgba(148, 163, 184, 0.08);
+  transition: width 0.25s ease;
   flex-shrink: 0;
 }
 
@@ -20,88 +27,99 @@
   width: 80px;
 }
 
+/* Header */
 .sidebar-header {
-  padding: 1.5rem;
-  font-size: 1.5rem;
+  padding: 1.25rem 1rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  border-bottom: 1px solid #374151;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
   display: flex;
   align-items: center;
-  color: #ffffff;
+  color: #e5e7eb;
 }
-
 .sidebar-header .pi {
-  color: #6366f1;
-  font-size: 1.75rem;
+  color: #8da2fb; /* softer indigo */
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 6px rgba(77, 91, 238, 0.35));
 }
-
 .sidebar-header .app-name {
-  margin-left: 0.75rem;
+  margin-left: 0.6rem;
   white-space: nowrap;
   opacity: 1;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease;
 }
-
 .sidebar.collapsed .app-name {
   opacity: 0;
   width: 0;
   overflow: hidden;
 }
 
+/* Nav */
 .sidebar-nav {
-  padding: 1rem;
+  padding: 0.75rem;
   flex-grow: 1;
 }
 
 .nav-link {
+  position: relative;
   display: flex;
   align-items: center;
-  padding: 0.875rem 1rem;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
   margin: 0.25rem 0;
-  border-radius: 8px;
+  border-radius: 10px;
   text-decoration: none;
-  color: #d1d5db;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  color: #c7d2fe; /* indigo-100ish */
+  transition: background-color 0.18s ease, color 0.18s ease,
+    transform 0.18s ease;
+  will-change: background-color, color;
 }
 
-.nav-link:hover {
-  background-color: #374151;
-  color: #ffffff;
-}
-
-.nav-link.active {
-  background: #4f46e5;
-  color: #ffffff;
-  font-weight: 600;
+/* Active indicator rail at left */
+.nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: -0.75rem;
+  top: 10%;
+  bottom: 10%;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #8da2fb, #22c55e);
+  box-shadow: 0 0 12px rgba(141, 162, 251, 0.6);
 }
 
 .nav-link .pi {
-  font-size: 1.5rem;
-  transition: transform 0.2s ease;
+  font-size: 1.25rem;
+  transform: translateZ(0);
+}
+.nav-link:hover {
+  background: rgba(99, 102, 241, 0.12);
+  color: #ffffff;
+}
+.nav-link.active {
+  background: linear-gradient(
+    90deg,
+    rgba(99, 102, 241, 0.18),
+    rgba(34, 197, 94, 0.14)
+  );
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.25);
 }
 
-.nav-link:hover .pi {
-  transform: scale(1.1);
-}
-
+/* Label hide on collapse */
 .nav-link-label {
-  margin-left: 1rem;
   white-space: nowrap;
   opacity: 1;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease;
 }
-
 .sidebar.collapsed .nav-link-label {
   opacity: 0;
   width: 0;
   overflow: hidden;
 }
 
-.sidebar-toggle {
-  padding: 1rem;
-  border-top: 1px solid #374151;
-}
-
+/* Footer area */
 .content-wrapper {
   display: flex;
   flex-direction: column;
@@ -113,28 +131,26 @@
   flex-grow: 1;
   padding: 2rem;
   overflow-y: auto;
-  overflow-x: hidden; /* --- ENHANCEMENT: Explicitly hide horizontal scroll --- */
+  overflow-x: hidden;
 }
 
-/* --- Responsive adjustments --- */
+/* Mobile behavior */
 @media (max-width: 992px) {
   .sidebar {
     position: fixed;
     left: -280px;
     z-index: 1000;
     height: 100%;
-    transition: left 0.3s ease;
+    transition: left 0.25s ease;
   }
   .sidebar.mobile-visible {
     left: 0;
   }
-  /* --- KEY CHANGE: Reduce padding on smaller screens --- */
   .main-content {
     padding: 1rem;
   }
 }
 
-/* --- ENHANCEMENT: Further reduce padding on very small screens --- */
 @media (max-width: 576px) {
   .main-content {
     padding: 1rem 0.75rem;

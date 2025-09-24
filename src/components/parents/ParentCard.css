@@ -1,182 +1,248 @@
-/* Card shell */
+/* -------- Parent Card: light, crisp shell -------- */
 .parent-card {
-  position: relative;
+  display: flex; /* NEW */
+  flex-direction: column; /* NEW */
+  height: 100%; /* NEW: allow equal-height grid to work */
   background: #ffffff;
-  border-radius: 18px;
-  border: 1px solid rgba(17, 24, 39, 0.08);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  /* MODIFICATION: Using Flexbox for proper vertical distribution */
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  min-height: 380px; /* Set a minimum height for consistency */
-  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
-    box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  color: #111827;
+  overflow: hidden;
 }
 
-.parent-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 25px -5px rgba(17, 24, 39, 0.1),
-    0 8px 10px -6px rgba(17, 24, 39, 0.1);
-}
-
-/* Accent bar */
-.card-accent {
+/* slim accent line (kept subtle on light) */
+.parent-card .card-accent {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 4px;
-  border-top-left-radius: 18px;
-  border-top-right-radius: 18px;
+  inset: 0 0 auto 0;
+  height: 3px;
   background: linear-gradient(90deg, #6366f1, #22c55e);
+  opacity: 0.7;
 }
 
 /* Header */
 .parent-card-header {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  padding: 14px 16px 10px;
+  display: flex;
   align-items: center;
-  padding-bottom: 12px;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
 }
 
 .parent-info {
   display: flex;
-  gap: 12px;
   align-items: center;
+  gap: 12px;
+  min-width: 0;
 }
 
-.parent-avatar {
-  background: #eef2ff;
-  color: #4338ca;
+.parent-avatar.p-avatar {
+  background: #eef2ff; /* indigo-50 */
+  color: #4f46e5; /* indigo-600 */
+  border: 1px solid #e0e7ff;
 }
 
-.parent-details .parent-name {
-  margin: 0;
+.parent-details {
+  min-width: 0;
+}
+.parent-name {
+  margin: 0 0 2px 0;
+  font-size: 1.05rem;
   font-weight: 700;
-  letter-spacing: 0.2px;
-  font-size: 1rem;
+  color: #0f172a; /* slate-900 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .parent-id {
-  font-size: 0.8rem;
-  color: #6b7280;
-}
-
-.parent-quick {
   display: flex;
-  gap: 8px;
   align-items: center;
+  gap: 6px;
+  color: #6b7280; /* gray-500 */
+  font-size: 0.86rem;
+  min-width: 0;
+}
+.parent-id span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* Body */
+/* Right chips area */
+.parent-quick .p-tag {
+  background: #f8fafc; /* slate-50 */
+  color: #0f172a;
+  border: 1px solid #e5e7eb;
+}
+
+/* -------- Body: embedded children on light -------- */
 .parent-card-body {
-  /* MODIFICATION: This makes the body area expand and push the footer down */
-  flex: 1;
-  min-height: 0; /* Prevents overflow issues with nested grids */
+  position: relative;
+  flex: 1 1 auto; /* NEW: this is the key */
+  padding: 12px;
+  background: #fafafa;
+  border-top: 1px solid #f1f5f9;
 }
 
-/* Improved placeholder for when there are no children */
-.no-children {
-  color: #6b7280;
-  background: #f9fafb;
-  border: 1px dashed #e5e7eb;
-  padding: 20px;
+/* faint inner panel so children feel “inside” */
+.parent-card-body::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
   border-radius: 12px;
-  height: 100%;
-  /* Centers the placeholder content */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  gap: 8px;
+  background: #ffffff;
+  border: 1px dashed #e5e7eb;
+  z-index: 0;
 }
 
-/* Children mini-cards grid */
+/* Always one per row */
 .child-grid {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: 1fr !important;
   gap: 10px;
 }
 
-/* Styles for child cards remain the same */
+/* -------- Mini Child Card: light + tidy -------- */
 .child-card-mini {
-  background: #ffffff;
-  border: 1px solid #eef2ff;
-  border-radius: 12px;
-  padding: 8px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
+  display: flex;
   align-items: center;
-  box-shadow: 0 6px 14px rgba(99, 102, 241, 0.08);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  justify-content: space-between;
+  gap: 10px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 10px 10px 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
-.child-card-mini:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.12);
-  background: #fafaff;
+
+.child-card-mini::before {
+  content: "";
+  width: 4px;
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #6366f1, #22c55e);
+  opacity: 0.9;
+  margin-right: 8px;
 }
+
 .mini-left {
   display: flex;
-  gap: 8px;
   align-items: center;
+  gap: 10px;
   min-width: 0;
 }
-.child-avatar {
-  background: #f3f4f6;
-  color: #111827;
+
+.child-avatar.p-avatar {
+  background: #f0f9ff; /* sky-50 */
+  color: #0369a1; /* sky-700 */
+  border: 1px solid #e0f2fe;
 }
+
 .child-text {
+  display: grid;
+  gap: 2px;
   min-width: 0;
 }
 .child-name {
   font-weight: 600;
-  font-size: 0.92rem;
-  white-space: nowrap;
+  color: #111827;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .child-id {
-  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
   color: #6b7280;
-  white-space: nowrap;
+  min-width: 0;
+}
+.child-id span {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
+/* compact actions: icons aligned, no jump */
 .mini-actions {
   display: flex;
-  gap: 6px;
-}
-
-/* Footer */
-.parent-card-footer {
-  display: flex;
-  /* MODIFICATION: Aligns actions to the right for a cleaner look */
-  justify-content: flex-end;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  padding-top: 12px; /* Adds space above the footer actions */
-  border-top: 1px solid #f3f4f6; /* A subtle line to separate footer */
+  gap: 4px;
+}
+.mini-actions .p-button.p-button-icon-only {
+  width: 34px;
+  height: 34px;
 }
 
+/* Copy buttons tiny and aligned */
+.btn-xxs.p-button {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 6px;
+}
+.copy-id-btn .pi {
+  font-size: 0.8rem;
+}
+
+/* -------- Footer -------- */
+.parent-card-footer {
+  flex-shrink: 0; /* NEW: don't collapse */
+  padding: 10px 12px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  border-top: 1px solid #f1f5f9;
+}
 .footer-actions {
   display: flex;
+  align-items: center;
   gap: 6px;
 }
-
-/* Icon-only sizing */
-.p-button.p-button-icon-only {
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border-radius: 10px;
+.parents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 18px;
+  align-items: stretch; /* makes every card the same height */
 }
-.countdown-chip {
-  font-size: 0.74rem;
-  color: #6b7280;
-  padding-left: 6px;
+
+/* Each card fills its grid cell height */
+.parents-grid > * {
+  height: 100%;
+}
+/* -------- CALM DELETE (no fill, no ripple, no animation) -------- */
+.p-button.p-button-danger.no-flash,
+.p-button.p-button-danger.no-anim,
+.mini-actions .p-button-danger,
+.parent-card-footer .p-button-danger {
+  background: transparent !important;
+  color: #b91c1c !important; /* red-700 for readability */
+  border-color: transparent !important;
+  transition: none !important;
+  animation: none !important;
+}
+.p-button.p-button-danger.no-flash:hover,
+.p-button.p-button-danger.no-anim:hover,
+.mini-actions .p-button-danger:hover,
+.parent-card-footer .p-button-danger:hover,
+.p-button.p-button-danger.no-flash:focus-visible,
+.p-button.p-button-danger.no-anim:focus-visible {
+  background: rgba(185, 28, 28, 0.08) !important; /* soft red tint */
+  color: #b91c1c !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+/* kill PrimeReact ripple only here */
+.p-button.p-button-danger.no-flash .p-ink,
+.p-button.p-button-danger.no-anim .p-ink,
+.mini-actions .p-button-danger .p-ink,
+.parent-card-footer .p-button-danger .p-ink {
+  display: none !important;
 }

@@ -1,6 +1,77 @@
 .audit-page {
   padding: 1rem;
 }
-.p-card .p-card-title {
-  font-weight: 700;
+.audit-card .p-card-title {
+  font-weight: 800;
+}
+.audit-card .p-card-subtitle {
+  color: #64748b;
+}
+
+/* Toolbar */
+.audit-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0 14px;
+  flex-wrap: wrap;
+}
+.audit-toolbar .toolbar-left,
+.audit-toolbar .toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Width helpers for Prime inputs */
+.w-14rem {
+  width: 14rem;
+}
+.w-16rem {
+  width: 16rem;
+}
+.w-20rem {
+  width: 20rem;
+}
+
+/* Table wrapper for skeleton height */
+.audit-table-wrap {
+  position: relative;
+  min-height: 420px;
+}
+
+/* Skeleton layout */
+.audit-skeleton {
+  display: grid;
+  gap: 12px;
+  padding: 8px 6px;
+}
+.audit-skel-row {
+  display: grid;
+  grid-template-columns: 14rem 8rem 10rem 8rem 16rem 6rem 8rem 14rem 6rem 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Mono style for IDs */
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.92rem;
+  color: #0f172a;
+}
+
+/* Nice scrollbar (optional) */
+.p-datatable-wrapper {
+  scrollbar-width: thin;
+}
+.p-datatable-wrapper::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+.p-datatable-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 8px;
 }

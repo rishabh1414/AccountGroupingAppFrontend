@@ -41,9 +41,9 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to="/parents" replace />} />
-          <Route path="parents" element={<ParentsPage />} />
-          <Route path="children" element={<ChildrenPage />} />
+          <Route index element={<Navigate to="/tech-biz-ceos" replace />} />
+          <Route path="tech-biz-ceos" element={<ParentsPage />} />
+          <Route path="private-level-end-clients" element={<ChildrenPage />} />
           <Route path="audit-logs" element={<AuditLogsPage />} />
           <Route path="update-password" element={<UpdatePasswordPage />} />
         </Route>

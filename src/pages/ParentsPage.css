@@ -1,20 +1,181 @@
-/* Page container + responsive grid for parent cards */
-.page-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 12px;
-}
-
-.parents-grid {
+/* ===== Page background ===== */
+.login-wrap {
+  min-height: 100vh;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 18px;
-  align-items: stretch;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(
+      1200px 500px at 0% -10%,
+      rgba(124, 58, 237, 0.18),
+      transparent 60%
+    ),
+    linear-gradient(180deg, #f5f7fb 0%, #eef2f7 100%);
 }
 
-/* tighter grid on big screens => ~3 across comfortably */
-@media (min-width: 1280px) {
-  .parents-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+/* ===== 2-column card ===== */
+.login-card-2col {
+  width: 100%;
+  max-width: 980px;
+  min-height: 520px;
+  background: #ffffff;
+  border-radius: 22px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.08), 0 16px 32px rgba(0, 0, 0, 0.06);
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  overflow: hidden;
+}
+
+/* ===== Left hero ===== */
+.lp-hero {
+  position: relative;
+  background: radial-gradient(
+      1000px 400px at 20% -10%,
+      rgba(255, 255, 255, 0.08),
+      transparent 70%
+    ),
+    linear-gradient(135deg, #7c3aed 0%, #6d28d9 60%, #8b5cf6 100%);
+  color: #fff;
+  padding: 42px 36px;
+  display: grid;
+  align-content: center;
+}
+
+.lp-hero-inner {
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 32px 28px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Big heading + helper */
+.lp-hero h1 {
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  line-height: 1.2;
+  margin: 0 0 10px;
+  font-weight: 800;
+}
+.lp-hero p {
+  margin: 0;
+  opacity: 0.95;
+  font-size: 0.98rem;
+}
+
+/* Contour-like pattern (SVG data URI) */
+.lp-hero::before {
+  content: "";
+  position: absolute;
+  inset: 24px 24px auto 24px;
+  height: 54%;
+  border-radius: 18px;
+  background-image: url("data:image/svg+xml,%3Csvg width='600' height='300' viewBox='0 0 600 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(255,255,255,0.25)' stroke-width='1.2'%3E%3Cpath d='M10,240 C90,160 210,180 310,120 C420,55 520,70 590,20'/%3E%3Cpath d='M10,270 C100,190 210,210 330,150 C420,100 520,120 590,70'/%3E%3Cpath d='M10,210 C120,140 220,150 330,110 C430,70 520,80 590,40'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.7;
+  z-index: 1;
+}
+
+/* Decorative dot grid */
+.lp-dots {
+  position: absolute;
+  right: 28px;
+  top: 28px;
+  width: 54px;
+  height: 90px;
+  background-image: radial-gradient(#ffffff 2px, rgba(255, 255, 255, 0) 2px);
+  background-size: 12px 12px;
+  background-position: 0 0;
+  opacity: 0.75;
+}
+
+/* ===== Right form ===== */
+.lp-form {
+  padding: 40px 40px 32px 40px;
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  background: #ffffff;
+}
+
+.lp-form-title {
+  margin: 0 0 8px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* inputs with icons aligned nicely */
+.p-input-icon-left > i {
+  color: #9aa3af;
+}
+.p-inputtext,
+.p-password-input {
+  height: 44px;
+}
+.p-password {
+  width: 100%;
+}
+.p-inputtext,
+.p-password-input,
+.p-checkbox .p-checkbox-box {
+  border-radius: 12px;
+}
+
+/* remember/forgot row */
+.lp-row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 6px 0 4px;
+}
+.lp-remember label {
+  margin-left: 8px;
+  color: #475569;
+  cursor: pointer;
+}
+
+/* submit button */
+.lp-submit {
+  margin-top: 4px;
+  height: 46px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7c3aed, #6d28d9);
+  border: none;
+}
+.lp-submit:enabled:hover {
+  filter: brightness(1.02);
+}
+
+/* links */
+.lp-link {
+  color: #6d28d9;
+  text-decoration: none;
+  font-weight: 600;
+}
+.lp-link:hover {
+  text-decoration: underline;
+}
+
+/* below button */
+.lp-signup {
+  margin-top: 10px;
+  text-align: center;
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 960px) {
+  .login-card-2col {
+    grid-template-columns: 1fr;
+  }
+  .lp-hero {
+    padding: 28px 24px;
+    min-height: 260px;
+  }
+  .lp-form {
+    padding: 28px 24px 24px;
   }
 }

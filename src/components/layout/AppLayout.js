@@ -20,8 +20,12 @@ const AppLayout = () => {
   };
 
   const navItems = [
-    { icon: "pi pi-fw pi-users", label: "Parents", to: "/parents" },
-    { icon: "pi pi-fw pi-sitemap", label: "Children", to: "/children" },
+    { icon: "pi pi-fw pi-users", label: "TechBizCEOs", to: "/tech-biz-ceos" },
+    {
+      icon: "pi pi-fw pi-sitemap",
+      label: "Private Label End Clients",
+      to: "/private-level-end-clients",
+    },
     { icon: "pi pi-fw pi-history", label: "Audit Logs", to: "/audit-logs" },
   ];
 

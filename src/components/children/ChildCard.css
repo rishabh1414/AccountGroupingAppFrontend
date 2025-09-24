@@ -1,81 +1,221 @@
+/* ==========================================
+   Child Card (LIGHT THEME, EQUAL HEIGHT, TIDY)
+   ========================================== */
+
 .child-card {
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid rgba(17, 24, 39, 0.06);
-  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.08);
-  height: 100%;
+  /* structure */
   display: flex;
   flex-direction: column;
-  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.22s cubic-bezier(0.22, 1, 0.36, 1);
-  animation: card-breath 8s ease-in-out infinite 0.5s;
+  height: 100%; /* enable equal height inside grid */
+  box-sizing: border-box;
+
+  /* look */
+  background: #ffffff;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  color: #0f172a; /* slate-900 */
+
+  /* local tokens */
+  --indigo-50: #eef2ff;
+  --indigo-100: #e0e7ff;
+  --indigo-600: #4f46e5;
+  --sky-50: #f0f9ff;
+  --sky-700: #0369a1;
+  --muted: #64748b; /* slate-500 */
+  --border: #e5e7eb;
+  --rail-1: #6366f1; /* indigo-500 */
+  --rail-2: #22c55e; /* green-500 */
 }
 
-.child-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: 0 16px 32px rgba(17, 24, 39, 0.12);
-}
-
-@keyframes card-breath {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(0.99);
-  }
-}
-
+/* ---------- Header ---------- */
 .child-card-header {
-  padding: 1.2rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 14px 12px 14px;
+  border-bottom: 1px solid #f1f5f9;
+
+  /* slim left rail (no absolute positioning to avoid overlaps) */
+  border-left: 4px solid var(--rail-1);
+  border-top-left-radius: 14px;
 }
 
-.child-card-avatar {
-  background: #22c55e;
-  color: #fff;
-  transition: transform 0.3s ease;
-}
-
-.child-card:hover .child-card-avatar {
-  transform: rotate(-10deg) scale(1.1);
-}
-
-.child-card-details {
+/* left stack (avatar + title + id pill) */
+.child-card-head-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   min-width: 0;
-  flex: 1;
 }
 
-.child-card-name {
+/* avatar: clean ring + soft gradient rim */
+.child-card .p-avatar {
+  width: 40px !important; /* <= force size */
+  height: 40px !important;
+  min-width: 40px !important;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #eef2ff; /* indigo-50 */
+  color: #4f46e5; /* indigo-600 */
+  border: 1px solid #e0e7ff;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+.child-card .p-avatar .p-avatar-text {
+  font-size: 0.95rem; /* letter size stays consistent */
   font-weight: 700;
+  line-height: 1;
+}
+/* title and id block */
+.child-card-title-wrap {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+.child-card-title {
   margin: 0;
-  white-space: nowrap;
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: #0f172a;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.child-card-id-container {
-  font-size: 0.85rem;
-  color: #6b7280;
-  margin-top: 0.25rem;
+/* ID pill with tiny copy */
+.child-card-id {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  background: #f8fafc;
+  color: var(--muted);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  line-height: 1;
+  max-width: 100%;
+}
+.child-card-id .pi {
+  font-size: 0.9rem;
+}
+.child-card-id span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 260px; /* keeps pill tidy */
+}
+
+/* tiny copy button */
+.child-card-id .p-button.p-button-text {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  padding: 0;
+  border-radius: 6px;
+}
+.child-card-id .p-button .pi {
+  font-size: 0.8rem;
+}
+
+/* optional right-side header actions */
+.child-card-head-actions {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 6px;
 }
 
+/* ---------- Body (flex-grow to push footer down) ---------- */
 .child-card-body {
-  padding: 0 1.2rem 1.2rem;
-  flex: 1;
+  flex: 1 1 auto; /* grow to fill height */
+  padding: 12px 14px;
+  background: #ffffff;
 }
 
+/* info rows inside body */
+.child-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  min-width: 0;
+}
+.child-row .label {
+  color: #334155; /* slate-700 */
+  font-weight: 600;
+}
+
+/* ---------- Footer (sticks at bottom) ---------- */
 .child-card-footer {
-  padding: 0.9rem 1.2rem;
-  border-top: 1px solid #eff2f7;
+  flex-shrink: 0;
+  padding: 10px 12px 12px;
   display: flex;
   justify-content: flex-end;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid #f1f5f9;
+  background: #ffffff;
+}
+
+/* icon-only buttons consistent size for perfect alignment */
+.child-card-footer .p-button.p-button-icon-only {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 10px;
+}
+.child-card-footer .p-button .pi {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* calm delete (no red fill, no ripple, no animation) */
+.child-card-footer .p-button-danger,
+.child-card-footer .p-button-danger.no-anim,
+.child-card-footer .p-button-danger.no-flash {
+  background: transparent !important;
+  color: #b91c1c !important;
+  border-color: transparent !important;
+  transition: none !important;
+  animation: none !important;
+}
+.child-card-footer .p-button-danger:hover,
+.child-card-footer .p-button-danger:focus-visible {
+  background: rgba(185, 28, 28, 0.1) !important;
+  color: #b91c1c !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.child-card-footer .p-button-danger .p-ink {
+  display: none !important;
+}
+
+/* ---------- Utilities ---------- */
+.child-card * {
+  box-sizing: border-box;
+  min-width: 0;
+}
+.child-card .pi {
+  vertical-align: middle;
+}
+
+/* small screens */
+@media (max-width: 480px) {
+  .child-card-header {
+    padding: 12px;
+  }
+  .child-card-body {
+    padding: 12px;
+  }
+  .child-card-footer {
+    padding: 10px 12px 12px;
+  }
+  .child-card-id span {
+    max-width: 180px;
+  }
 }

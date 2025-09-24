@@ -58,7 +58,9 @@ const ChildCard = ({ child, onEdit, onDelete, onTransfer }) => {
           <div className="parent-info-container">
             <i className="pi pi-users parent-info-icon"></i>
             <div className="parent-info-text">
-              <div className="label">Parent Account</div>
+              <div className="label">
+                <b>TechBizCEO Account</b>
+              </div>
               <div className="name">{parentName}</div>
             </div>
           </div>
@@ -74,13 +76,13 @@ const ChildCard = ({ child, onEdit, onDelete, onTransfer }) => {
           <Button
             icon="pi pi-arrows-h"
             className="p-button-text p-button-help"
-            tooltip="Transfer to another Parent"
+            tooltip="Transfer to another TechBizCEO"
             onClick={() => onTransfer(child)}
           />
           <Button
             icon="pi pi-trash"
             className="p-button-text p-button-danger"
-            tooltip="Delete Child"
+            tooltip="Delete PLEC"
             onClick={() => onDelete(child)}
           />
         </div>

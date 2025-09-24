@@ -91,7 +91,7 @@ const ChildForm = ({ isVisible, onHide, editChild, preselectedParent }) => {
         disabled={isSubmitting}
       />
       <Button
-        label={isEditMode ? "Save Changes" : "Add Child"}
+        label={isEditMode ? "Save Changes" : "Add PLEC"}
         icon="pi pi-check"
         type="submit"
         form="child-form"
@@ -103,7 +103,7 @@ const ChildForm = ({ isVisible, onHide, editChild, preselectedParent }) => {
 
   return (
     <Dialog
-      header={isEditMode ? "Edit or Transfer Child" : "Add New Child"}
+      header={isEditMode ? "Edit or Transfer PLEC" : "Add New PLEC"}
       visible={isVisible}
       // --- KEY CHANGE: Removed inline style, added a class for external CSS ---
       className="child-form-dialog"
@@ -160,12 +160,12 @@ const ChildForm = ({ isVisible, onHide, editChild, preselectedParent }) => {
             htmlFor="parentId"
             className={classNames({ "p-error": errors.parentId })}
           >
-            Parent Account*
+            TechBizCEO Account*
           </label>
           <Controller
             name="parentId"
             control={control}
-            rules={{ required: "Parent Account is required." }}
+            rules={{ required: "TechBizCEO Account is required." }}
             render={({ field }) => (
               <Dropdown
                 inputId={field.name}
@@ -174,7 +174,7 @@ const ChildForm = ({ isVisible, onHide, editChild, preselectedParent }) => {
                 onChange={(e) => field.onChange(e.value)}
                 optionLabel="name"
                 optionValue="_id"
-                placeholder="Select a Parent"
+                placeholder="Select a TechBizCEO Account"
                 filter
                 disabled={isEditMode ? false : !!preselectedParent}
                 className={classNames({ "p-invalid": errors.parentId })}

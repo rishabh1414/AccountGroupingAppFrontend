@@ -23,6 +23,8 @@ export default function ParentCard({
   const { countdowns } = useAppStore();
   const globalOn = !!countdowns?.global?.enabled;
 
+  const copy = (text) => navigator.clipboard?.writeText(text);
+
   return (
     <article className="parent-card">
       <div className="card-accent" />
@@ -39,6 +41,13 @@ export default function ParentCard({
             <div className="parent-id">
               <i className="pi pi-map-marker mr-2" />
               <span title={parent.locationId}>{parent.locationId}</span>
+              {/* tiny copy after parent id */}
+              <Button
+                icon="pi pi-copy"
+                className="p-button-text btn-xxs copy-id-btn"
+                onClick={() => copy(parent.locationId)}
+                tooltip="Copy Parent Location ID"
+              />
             </div>
           </div>
         </div>
@@ -65,6 +74,13 @@ export default function ParentCard({
                       <div className="child-id">
                         <i className="pi pi-hashtag mr-2" />
                         <span title={child.locationId}>{child.locationId}</span>
+                        {/* tiny copy after child id */}
+                        <Button
+                          icon="pi pi-copy"
+                          className="p-button-text btn-xxs copy-id-btn"
+                          onClick={() => copy(child.locationId)}
+                          tooltip="Copy Child Location ID"
+                        />
                       </div>
                     </div>
                   </div>
@@ -83,7 +99,7 @@ export default function ParentCard({
                     />
                     <Button
                       icon="pi pi-trash"
-                      className="p-button-text p-button-danger p-button-icon-only"
+                      className="p-button-text p-button-danger p-button-icon-only no-flash"
                       onClick={() => onDeleteChild(child)}
                       tooltip="Delete"
                     />
@@ -124,7 +140,6 @@ export default function ParentCard({
           />
         </div>
         <div className="footer-actions right">
-          {/* SchedulerToggle will auto-hide if global is enabled */}
           {!globalOn && (
             <SchedulerToggle mode="parent" parent={parent} compact />
           )}
@@ -136,7 +151,7 @@ export default function ParentCard({
           />
           <Button
             icon="pi pi-trash"
-            className="p-button-text p-button-danger p-button-icon-only"
+            className="p-button-text p-button-danger p-button-icon-only no-flash"
             onClick={() => onDelete(parent)}
             tooltip="Delete Parent"
           />

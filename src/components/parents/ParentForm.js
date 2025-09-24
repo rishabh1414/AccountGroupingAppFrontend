@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
@@ -190,7 +190,7 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
   const {
     addParent,
     updateParent,
-    updateParentCustomValues, // <- make sure this exists in your store
+    updateParentCustomValues,
     searchGhlLocations,
   } = useAppStore();
 
@@ -206,6 +206,7 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
     handleSubmit,
     reset,
     watch,
+    setValue, // ⬅️ NEW: needed to programmatically set fields
     formState: { errors, isSubmitting, dirtyFields },
   } = useForm({
     defaultValues,
@@ -213,6 +214,8 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
   });
 
   const selectedTheme = watch("customValues.appTheme");
+  const color1 = watch("customValues.agencyColor1");
+  const color2 = watch("customValues.agencyColor2");
 
   // Normalize potential existing theme from GHL
   const normalizeThemeKey = (val) => {
@@ -221,19 +224,15 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
     return Object.prototype.hasOwnProperty.call(THEME_VARS, k) ? k : "";
   };
 
-  // Pre-fill when editing (show current GHL values if they exist)
+  /* ----- Prefill when editing (unchanged) ----- */
   const formattedEditData = useMemo(() => {
     if (!isEditMode) return defaultValues;
-
     const customValueFields = {};
-    // copy whatever keys are present on the parent
     for (const key in editParent.customValues) {
       let raw = editParent.customValues[key]?.value ?? "";
-      // normalize appTheme specifically
       if (key === "appTheme") raw = normalizeThemeKey(raw);
       customValueFields[key] = raw;
     }
-    // ensure all declared keys exist so inputs render
     for (const key of Object.keys(CUSTOM_VALUE_FIELDS)) {
       if (!(key in customValueFields)) customValueFields[key] = "";
     }
@@ -251,6 +250,33 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
       setSuccessMessage("");
     }
   }, [isVisible, formattedEditData, reset]);
+
+  /* ==========================================================
+     AUTO-SYNC AGENCY COLORS WHEN THEME CHANGES
+     - Sidebar BG  -> Agency Color 1
+     - Interactive -> Agency Color 2
+     ========================================================== */
+  const prevThemeRef = useRef(null);
+  useEffect(() => {
+    const themeKey = normalizeThemeKey(selectedTheme);
+    const prev = prevThemeRef.current;
+
+    // Only react to actual user theme changes (avoid overwriting on initial reset)
+    if (themeKey && prev !== themeKey) {
+      const t = THEME_VARS[themeKey];
+      if (t) {
+        setValue("customValues.agencyColor1", t["--sb-bg"], {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
+        setValue("customValues.agencyColor2", t["--interact-bg"], {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
+      }
+    }
+    prevThemeRef.current = themeKey || null;
+  }, [selectedTheme, setValue]);
 
   const handleGhlSearch = async (e) => {
     const q = e.query?.trim();
@@ -275,23 +301,17 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
 
     try {
       if (isEditMode) {
-        // -----------------------
-        // EDIT FLOW
-        // -----------------------
         let changed = false;
 
-        // 1) Alias update (if changed)
         if (dirtyFields.alias) {
           await updateParent(editParent._id, { alias: data.alias.trim() });
           changed = true;
         }
 
-        // 2) Custom values update (send only changed keys)
         if (dirtyFields.customValues) {
           const updates = {};
           for (const key in dirtyFields.customValues) {
             if (dirtyFields.customValues[key]) {
-              // send normalized appTheme key name as plain text
               updates[key] =
                 key === "appTheme"
                   ? normalizeThemeKey(data.customValues[key])
@@ -299,7 +319,6 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
             }
           }
           if (Object.keys(updates).length > 0) {
-            // This hits PATCH /api/custom-values/parent/:id and propagates to children + GHL
             await updateParentCustomValues(editParent._id, updates);
             changed = true;
           }
@@ -309,15 +328,12 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
           changed ? "Parent updated successfully!" : "No changes were made."
         );
       } else {
-        // -----------------------
-        // CREATE FLOW
-        // -----------------------
         await addParent({
           name: data.ghlLocation.name,
           locationId: data.ghlLocation.id,
           alias: data.alias.trim(),
         });
-        onHide(); // Close after creation
+        onHide();
       }
     } catch (err) {
       console.error("Form submission failed:", err);
@@ -359,7 +375,7 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
   const getFieldLabel = (key) =>
     CUSTOM_VALUE_FIELDS[key] || key.replace(/([A-Z])/g, " $1");
 
-  // --- Preview helpers
+  // --- Preview helpers (unchanged) ---
   const renderThemeSwatches = (themeKey) => {
     const t = THEME_VARS[themeKey];
     if (!t) return null;
@@ -372,8 +388,8 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
           style={{
             backgroundColor: t["--sb-bg"],
             width: "30%",
-            height: "40px",
-            borderRadius: "4px",
+            height: 40,
+            borderRadius: 4,
           }}
           title="Sidebar BG"
         />
@@ -381,8 +397,8 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
           style={{
             backgroundColor: t["--interact-bg"],
             width: "30%",
-            height: "40px",
-            borderRadius: "4px",
+            height: 40,
+            borderRadius: 4,
           }}
           title="Interactive BG"
         />
@@ -390,8 +406,8 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
           style={{
             backgroundColor: t["--interact-text"],
             width: "30%",
-            height: "40px",
-            borderRadius: "4px",
+            height: 40,
+            borderRadius: 4,
             border: "1px solid #9ca3af",
           }}
           title="Interactive Text"
@@ -407,9 +423,9 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
       <div className="mt-3">
         <div
           style={{
-            height: "14px",
+            height: 14,
             width: "100%",
-            borderRadius: "6px",
+            borderRadius: 6,
             background: `linear-gradient(90deg, ${t["--sb-bg"]} 35%, ${t["--interact-bg"]} 65%)`,
             border: "1px solid #e5e7eb",
           }}
@@ -440,11 +456,27 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
     );
   };
 
+  const ColorChip = ({ value }) => (
+    <span
+      aria-label="color preview"
+      title={value || "—"}
+      style={{
+        display: "inline-block",
+        width: 18,
+        height: 18,
+        borderRadius: 4,
+        marginLeft: 8,
+        border: "1px solid #d1d5db",
+        background: value || "transparent",
+      }}
+    />
+  );
+
   return (
     <Dialog
       header={isEditMode ? "Edit Parent Account" : "Add New Parent"}
       visible={isVisible}
-      style={{ width: "90vw", maxWidth: "800px" }}
+      style={{ width: "90vw", maxWidth: 800 }}
       onHide={handleDialogHide}
       footer={dialogFooter}
       modal
@@ -456,6 +488,7 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
       {successMessage && (
         <Message severity="success" text={successMessage} className="mb-3" />
       )}
+
       <form
         id="parent-form"
         onSubmit={handleSubmit(onSubmit)}
@@ -542,7 +575,8 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
                           </>
                         );
                       }
-                      return (
+
+                      const input = (
                         <InputText
                           id={field.name}
                           {...field}
@@ -550,6 +584,26 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
                           disabled={isSubmitting}
                         />
                       );
+
+                      // Add live color chips only for Agency Color 1/2
+                      if (key === "agencyColor1") {
+                        return (
+                          <div className="flex align-items-center">
+                            {input}
+                            <ColorChip value={color1} />
+                          </div>
+                        );
+                      }
+                      if (key === "agencyColor2") {
+                        return (
+                          <div className="flex align-items-center">
+                            {input}
+                            <ColorChip value={color2} />
+                          </div>
+                        );
+                      }
+
+                      return input;
                     }}
                   />
                 </div>
@@ -558,7 +612,6 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
           </>
         )}
 
-        {/* Persistent preview at the end of the form */}
         {selectedTheme && (
           <div className="mt-3">
             <h5 className="mt-0 mb-2">Theme Preview</h5>
@@ -569,5 +622,4 @@ const ParentForm = ({ isVisible, onHide, editParent }) => {
     </Dialog>
   );
 };
-
 export default ParentForm;
